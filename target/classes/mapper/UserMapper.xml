@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="demo.model.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="CHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="CHAR"/>
+        <result column="user_type" property="userType" jdbcType="VARCHAR"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="insertUser" parameterType="demo.model.User" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into user (id, email, password, nickname, address, salt, user_type, create_at, update_at)
+        values (#{id, jdbcType = INTEGER}, #{email, jdbcType = VARCHAR}, #{password, jdbcType = CHAR},
+                #{nickname, jdbcType = VARCHAR}, #{address, jdbcType = VARCHAR}, #{salt, jdbcType = CHAR},
+                #{userType, jdbcType = VARCHAR}, #{createAt, jdbcType = TIMESTAMP}, #{updateAt, jdbcType = TIMESTAMP})
+    </insert>
+    <update id="updateUserByUserId" parameterType="demo.model.User">
+        update user
+        <set>
+            <if test="null != email">
+                email = #{email, jdbcType = VARCHAR},
+            </if>
+            <if test="null != userPassword">
+                user_password = #{password},
+            </if>
+            <if test="null != nickname">
+                nickname = #{nickname, jdbcType = VARCHAR},
+            </if>
+            <if test="null != address">
+                address = #{address, jdbcType = VARCHAR},
+            </if>
+            <if test="null != createAt">
+                create_at = #{createAt, jdbcType = TIMESTAMP},
+            </if>
+            <if test="null != updateAt">
+                update_at = #{updateAt, jdbcType = TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id, jdbcType = INTEGER}
+    </update>
+    <update id="updateUserByEmail">
+        update user
+        <set>
+            <if test="null != email">
+                email = #{email, jdbcType = VARCHAR},
+            </if>
+            <if test="null != userPassword">
+                user_password = #{password},
+            </if>
+            <if test="null != nickname">
+                nickname = #{nickname, jdbcType = VARCHAR},
+            </if>
+            <if test="null != address">
+                address = #{address, jdbcType = VARCHAR},
+            </if>
+            <if test="null != createAt">
+                create_at = #{createAt, jdbcType = TIMESTAMP},
+            </if>
+            <if test="null != updateAt">
+                update_at = #{updateAt, jdbcType = TIMESTAMP},
+            </if>
+        </set>
+        where email = #{email, jdbcType = VARCHAR}
+    </update>
+    <select id="selectUserByEmail" resultType="demo.model.User">
+        select id,
+               email,
+               nickname,
+               address,
+               create_at,
+               update_at,
+               password,
+               salt,
+               user_type
+        from user
+        where email = #{email, jdbcType = VARCHAR}
+    </select>
+    <select id="selectUserByUserId" resultType="demo.model.User">
+        select id,
+               password,
+               salt,
+               nickname,
+               address,
+               create_at,
+               update_at,
+               email,
+               user_type
+        from user
+        where id = #{id, jdbcType = INTEGER}
+    </select>
+</mapper>
