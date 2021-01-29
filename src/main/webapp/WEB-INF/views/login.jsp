@@ -69,7 +69,7 @@
                 <div class="col-md-12 col-md-offset-1">
                     <div class="col-md-4 col-md-offset-3" style="padding-top: 7px;">
                         <label>
-                            <a href="/register">忘记密码</a>
+                            <a href="/user/register">忘记密码</a>
                         </label>
                     </div>
                 </div>

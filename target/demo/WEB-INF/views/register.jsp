@@ -116,7 +116,7 @@
                     },
                     success: function (data) {
                         if (data.code === 0) {
-                            window.location.href = "/login.jsp"
+                            window.location.href = "/user/login"
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

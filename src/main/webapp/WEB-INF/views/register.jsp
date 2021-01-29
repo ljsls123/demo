@@ -90,7 +90,7 @@
             <div class="form-group" style="margin-bottom: 0px;">
                 <div class="col-md-5 col-md-offset-7">
                     <label>已经有账号？
-                        <a href="/login">登录</a>
+                        <a href="/user/login">登录</a>
                     </label>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                     },
                     success: function (data) {
                         if (data.code === 0) {
-                            window.location.href = "/login.jsp"
+                            window.location.href = "/user/login"
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
