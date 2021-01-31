@@ -62,9 +62,30 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="name" class="col-md-3 control-label">姓名</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="name" placeholder="姓名" name="name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="gender" class="col-md-3 control-label">性别</label>
+                <div class="col-md-8">
+                    <select class="form-control" id="gender" name="gender">
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="nickname" class="col-md-3 control-label">昵称</label>
                 <div class="col-md-8">
                     <input type="text" class="form-control" id="nickname" placeholder="昵称" name="nickname">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="telephone" class="col-md-3 control-label">电话</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="telephone" placeholder="电话" name="telephone">
                 </div>
             </div>
             <div class="form-group">
@@ -90,7 +111,7 @@
             <div class="form-group" style="margin-bottom: 0px;">
                 <div class="col-md-5 col-md-offset-7">
                     <label>已经有账号？
-                        <a href="/user/login">登录</a>
+                        <a href="${pageContext.request.contextPath}/user/login">登录</a>
                     </label>
                 </div>
             </div>
@@ -100,8 +121,8 @@
 <script type="text/javascript">
     $(function () {
         $("#button").click(function () {
-            var password = c_password_md5($("#password").val());
-            var type = $("#type").val();
+            const password = c_password_md5($("#password").val());
+            const type = $("#type").val();
             if ($("#register").valid()) {
                 $.ajax({
                     url: "/user/register",
@@ -111,12 +132,17 @@
                         nickname: $("#nickname").val(),
                         address: $("#address").val(),
                         email: $("#email").val(),
+                        name: $("#name").val(),
+                        gender: $("#gender").val(),
+                        telephone: $("#telephone").val(),
                         password: password,
                         type: type
                     },
                     success: function (data) {
                         if (data.code === 0) {
                             window.location.href = "/user/login"
+                        } else {
+                            alert(data.msg)
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -134,6 +160,11 @@
 <script type="text/javascript">
     $(function () {
         // 手机号校验
+        jQuery.validator.addMethod("telephone", function (value, element) {
+            var length = value.length;
+            var mobile = /^[1]\d{2}\d{8}$/
+            return this.optional(element) || (length == 11 && mobile.test(value));
+        }, "手机号码格式错误");
         $("#register").validate({
             debug: true,
             focusCleanup: true,
@@ -142,6 +173,10 @@
                 $(element).valid();
             },
             rules: {
+                telephone: {
+                    required: true,
+                    telephone: true
+                },
                 email: {
                     required: true,
                 },
@@ -164,6 +199,10 @@
                 }
             },
             messages: {
+                telephone: {
+                    required: "请输入账号",
+                    telephone: "格式错误"
+                },
                 email: {
                     required: "请输入账号",
                 },

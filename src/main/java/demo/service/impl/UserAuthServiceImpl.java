@@ -14,11 +14,11 @@ import demo.model.response.ResponseResult;
 import demo.service.UserAuthService;
 import demo.util.EncryptUtil;
 import demo.util.ValidateUtil;
+import demo.vo.LoginVO;
+import demo.vo.RegisterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import vo.LoginVO;
-import vo.RegisterVO;
 
 @Service
 public class UserAuthServiceImpl implements UserAuthService {
@@ -44,6 +44,9 @@ public class UserAuthServiceImpl implements UserAuthService {
         user.setAddress(registerDTO.getAddress());
         user.setUserType(registerDTO.getType());
         user.setNickname(registerDTO.getNickname());
+        user.setUserName(registerDTO.getName());
+        user.setGender(registerDTO.getGender());
+        user.setTelephone(registerDTO.getTelephone());
         LocalDateTime date = LocalDateTime.now(ZoneOffset.UTC);
         user.setCreateAt(date);
         user.setUpdateAt(date);
@@ -85,7 +88,7 @@ public class UserAuthServiceImpl implements UserAuthService {
     }
 
     @Override
-    public ResponseResult<Void> updatePassword(UpdatePasswordDTO updatePasswordDTO) {
+    public ResponseResult<Void> updatePassword(UpdatePasswordDTO updatePasswordDTO, String email) {
         if (ValidateUtil.passwordFormatCheck(updatePasswordDTO.getOldPassword())) {
             throw new BizException(ErrorCode.OLD_PASSWORD_FORMAT_ERROR, String
                     .format("oldPassword: %s format wrong when updatePassword", updatePasswordDTO.getOldPassword()));
@@ -94,7 +97,7 @@ public class UserAuthServiceImpl implements UserAuthService {
             throw new BizException(ErrorCode.NEW_PASSWORD_FORMAT_ERROR, String
                     .format("newPassword: %s format wrong when updatePassword", updatePasswordDTO.getNewPassword()));
         }
-        User user = userMapper.selectUserByEmail(updatePasswordDTO.getEmail());
+        User user = userMapper.selectUserByEmail(email);
         if (!user.getPassword().equals(EncryptUtil
                 .encryptPassword(updatePasswordDTO.getOldPassword(), user.getSalt()))) {
             throw new BizException(ErrorCode.OLD_PASSWORD_WRONG_ERROR, String

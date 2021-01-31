@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateUserInfoDTO implements Serializable {
     private static final long serialVersionUID = 3068989856910538530L;
+
+    private String telephone;
+
     private String nickName;
 
     private String address;

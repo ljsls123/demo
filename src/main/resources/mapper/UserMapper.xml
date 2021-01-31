@@ -5,40 +5,40 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="CHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="CHAR"/>
         <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
         <result column="address" property="address" jdbcType="VARCHAR"/>
         <result column="salt" property="salt" jdbcType="CHAR"/>
-        <result column="user_type" property="userType" jdbcType="VARCHAR"/>
+        <result column="user_type" property="userType" jdbcType="CHAR"/>
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
     </resultMap>
     <insert id="insertUser" parameterType="demo.model.User" useGeneratedKeys="true"
             keyProperty="id">
-        insert into user (id, email, password, nickname, address, salt, user_type, create_at, update_at)
+        insert into user (id, email, password, user_name, gender, nickname, telephone, address, salt, user_type,
+                          create_at,
+                          update_at)
         values (#{id, jdbcType = INTEGER}, #{email, jdbcType = VARCHAR}, #{password, jdbcType = CHAR},
-                #{nickname, jdbcType = VARCHAR}, #{address, jdbcType = VARCHAR}, #{salt, jdbcType = CHAR},
-                #{userType, jdbcType = VARCHAR}, #{createAt, jdbcType = TIMESTAMP}, #{updateAt, jdbcType = TIMESTAMP})
+                #{userName, jdbcType = VARCHAR}, #{gender, jdbcType = CHAR}, #{nickname, jdbcType = VARCHAR},
+                #{telephone, jdbcType = VARCHAR}, #{address, jdbcType = VARCHAR}, #{salt, jdbcType = CHAR},
+                #{userType, jdbcType = CHAR}, #{createAt, jdbcType = TIMESTAMP}, #{updateAt, jdbcType = TIMESTAMP})
     </insert>
     <update id="updateUserByUserId" parameterType="demo.model.User">
         update user
         <set>
-            <if test="null != email">
-                email = #{email, jdbcType = VARCHAR},
-            </if>
-            <if test="null != userPassword">
-                user_password = #{password},
+            <if test="null != password">
+                password = #{password, jdbcType = CHAR},
             </if>
             <if test="null != nickname">
                 nickname = #{nickname, jdbcType = VARCHAR},
             </if>
+            <if test="null != telephone">
+                telephone = #{telephone, jdbcType = VARCHAR},
+            </if>
             <if test="null != address">
                 address = #{address, jdbcType = VARCHAR},
-            </if>
-            <if test="null != createAt">
-                create_at = #{createAt, jdbcType = TIMESTAMP},
-            </if>
-            <if test="null != updateAt">
-                update_at = #{updateAt, jdbcType = TIMESTAMP},
             </if>
         </set>
         where id = #{id, jdbcType = INTEGER}
@@ -46,23 +46,17 @@
     <update id="updateUserByEmail">
         update user
         <set>
-            <if test="null != email">
-                email = #{email, jdbcType = VARCHAR},
-            </if>
-            <if test="null != userPassword">
-                user_password = #{password},
+            <if test="null != password">
+                password = #{password, jdbcType = CHAR},
             </if>
             <if test="null != nickname">
                 nickname = #{nickname, jdbcType = VARCHAR},
             </if>
+            <if test="null != telephone">
+                telephone = #{telephone, jdbcType = VARCHAR},
+            </if>
             <if test="null != address">
                 address = #{address, jdbcType = VARCHAR},
-            </if>
-            <if test="null != createAt">
-                create_at = #{createAt, jdbcType = TIMESTAMP},
-            </if>
-            <if test="null != updateAt">
-                update_at = #{updateAt, jdbcType = TIMESTAMP},
             </if>
         </set>
         where email = #{email, jdbcType = VARCHAR}
@@ -70,7 +64,10 @@
     <select id="selectUserByEmail" resultType="demo.model.User">
         select id,
                email,
+               user_name,
+               gender,
                nickname,
+               telephone,
                address,
                create_at,
                update_at,
@@ -82,13 +79,16 @@
     </select>
     <select id="selectUserByUserId" resultType="demo.model.User">
         select id,
-               password,
-               salt,
+               email,
+               user_name,
+               gender,
                nickname,
+               telephone,
                address,
                create_at,
                update_at,
-               email,
+               password,
+               salt,
                user_type
         from user
         where id = #{id, jdbcType = INTEGER}

@@ -61,17 +61,7 @@
                     <select class="form-control" id="type" name="type">
                         <option value="1">用户登录</option>
                         <option value="2">工人登录</option>
-                        <option value="3">管理员登录</option>
                     </select>
-                </div>
-            </div>
-            <div class="form-group" style="margin-bottom: 30px;">
-                <div class="col-md-12 col-md-offset-1">
-                    <div class="col-md-4 col-md-offset-3" style="padding-top: 7px;">
-                        <label>
-                            <a href="/user/register">忘记密码</a>
-                        </label>
-                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -82,7 +72,7 @@
             <div class="form-group" style="margin-bottom: 0px;">
                 <div class="col-md-5 col-md-offset-7">
                     <label>还没有账号？
-                        <a href="/user/register">注册</a>
+                        <a href="${pageContext.request.contextPath}/user/register">注册</a>
                     </label>
                 </div>
             </div>
@@ -111,9 +101,12 @@
                         },
                         success: function (data) {
                             if (data.code === 0) {
-                                alert("成功");
+                                if (data.result.userType === "1")
+                                    window.location.href = '/user/main';
+                                if (data.result.userType === "2")
+                                    window.location.href = '/worker/main';
                             } else {
-                                alert(data.msg);
+                                alert(data.msg)
                             }
 
                         },

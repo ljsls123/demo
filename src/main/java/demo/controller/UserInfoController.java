@@ -5,13 +5,15 @@ import javax.servlet.http.HttpSession;
 import demo.dto.UpdateUserInfoDTO;
 import demo.model.response.ResponseResult;
 import demo.service.UserInfoService;
+import demo.vo.LoginVO;
+import demo.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vo.LoginVO;
-import vo.UserInfoVO;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -19,15 +21,23 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @PostMapping(value = "/getUserInfo")
-    public ResponseResult<UserInfoVO> getUserInfo(HttpSession session) {
+    @GetMapping(value = "/getUserInfo")
+    public String getUserInfo(HttpSession session, Model model) {
         LoginVO loginVO = (LoginVO) session.getAttribute("user");
         String email = loginVO.getEmail();
-        return userInfoService.getUserInfo(email);
+        UserInfoVO userInfoVO = userInfoService.getUserInfo(email).getResult();
+        model.addAttribute("userInfoVo", userInfoVO);
+        return "getUserInfo";
+    }
+
+    @GetMapping(value = "/updateUserInfo")
+    public String toUpdateUserInfo() {
+        return "updateUserInfo";
     }
 
     @PostMapping(value = "/updateUserInfo")
-    public ResponseResult<Void> updateUserInfo(@RequestBody UpdateUserInfoDTO updateUserInfoDTO, HttpSession session) {
+    @ResponseBody
+    public ResponseResult<Void> updateUserInfo(UpdateUserInfoDTO updateUserInfoDTO, HttpSession session) {
         LoginVO loginVO = (LoginVO) session.getAttribute("user");
         String email = loginVO.getEmail();
         return userInfoService.updateUserInfo(updateUserInfoDTO, email);

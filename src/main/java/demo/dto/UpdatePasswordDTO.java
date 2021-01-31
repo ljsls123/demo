@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdatePasswordDTO implements Serializable {
     private static final long serialVersionUID = -2083323796835245977L;
-    private String email;
 
     private String oldPassword;
 

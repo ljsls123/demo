@@ -7,9 +7,9 @@ import demo.mapper.UserMapper;
 import demo.model.User;
 import demo.model.response.ResponseResult;
 import demo.service.UserInfoService;
+import demo.vo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vo.UserInfoVO;
 
 /**
  * @author roger
@@ -34,19 +34,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public ResponseResult<Void> updateUserInfo(UpdateUserInfoDTO updateUserInfoDTO, String email) {
-        if (updateUserInfoDTO.getNickName() == null && updateUserInfoDTO.getAddress() == null) {
+        if (updateUserInfoDTO.getNickName() == null && updateUserInfoDTO.getAddress() == null && updateUserInfoDTO.getTelephone() == null) {
             throw new BizException(ErrorCode.NICKNAME_AND_ADDRESS_BOTH_NULL);
         }
         User user = new User();
-        if (updateUserInfoDTO.getAddress() != null && updateUserInfoDTO.getAddress().length() > 255) {
-            throw new BizException(ErrorCode.ADDRESS_FORMAT_ERROR);
-        }
-        if (updateUserInfoDTO.getNickName() != null && updateUserInfoDTO.getNickName().length() > 32) {
-            throw new BizException(ErrorCode.NICKNAME_FORMAT_ERROR);
-        }
         user.setEmail(email);
-        user.setAddress(updateUserInfoDTO.getAddress());
-        user.setNickname(updateUserInfoDTO.getNickName());
+        if (updateUserInfoDTO.getAddress() != null && updateUserInfoDTO.getAddress().length() < 255) {
+            user.setAddress(updateUserInfoDTO.getAddress());
+        }
+        if (updateUserInfoDTO.getNickName() != null && updateUserInfoDTO.getNickName().length() < 32) {
+            user.setNickname(updateUserInfoDTO.getNickName());
+        }
+        if (updateUserInfoDTO.getTelephone() != null) {
+            user.setTelephone(updateUserInfoDTO.getTelephone());
+        }
         userMapper.updateUserByEmail(user);
         return ResponseResult.success();
     }
