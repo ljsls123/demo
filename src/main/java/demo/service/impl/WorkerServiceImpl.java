@@ -1,5 +1,7 @@
 package demo.service.impl;
 
+import java.util.List;
+
 import demo.dto.CreateItemDTO;
 import demo.mapper.ItemMapper;
 import demo.model.Item;
@@ -18,5 +20,11 @@ public class WorkerServiceImpl implements WorkerService {
         Item item = new Item(createItemDTO, userId, img);
         itemMapper.insert(item);
         return ResponseResult.success();
+    }
+
+    @Override
+    public ResponseResult<List<Item>> getItems(int page, int limit, int id) {
+
+        return null;
     }
 }

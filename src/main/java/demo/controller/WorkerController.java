@@ -1,9 +1,11 @@
 package demo.controller;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import demo.dto.CreateItemDTO;
+import demo.model.Item;
 import demo.service.UserInfoService;
 import demo.service.WorkerService;
 import demo.util.UploadUtil;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -66,8 +69,10 @@ public class WorkerController {
     }
 
     @GetMapping(value = "/getItems")
-    public String getItems() {
-        
+    public String getItems(@RequestParam("page") int page, @RequestParam("limit") int limit, Model model, HttpSession session) {
+        LoginVO loginVO = (LoginVO) session.getAttribute("user");
+        List<Item> list = workerService.getItems(page, limit, loginVO.getUserId()).getResult();
+        model.addAttribute("items", list);
         return "workerGetItems";
     }
 }
