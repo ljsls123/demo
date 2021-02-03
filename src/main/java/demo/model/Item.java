@@ -1,9 +1,12 @@
 package demo.model;
 
-import demo.dto.CreateItemDTO;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
     private Integer id;
 
@@ -21,13 +24,4 @@ public class Item {
 
     private String online;
 
-    public Item(CreateItemDTO createItemDTO, Integer userId, String img) {
-        this.userId = userId;
-        this.title = createItemDTO.getTitle();
-        this.type = createItemDTO.getType();
-        this.description = createItemDTO.getDescription();
-        this.price = createItemDTO.getPrice();
-        this.img = img;
-        this.online = "1";
-    }
 }

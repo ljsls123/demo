@@ -18,4 +18,25 @@
                 #{type, jdbcType = VARCHAR}, #{description, jdbcType = VARCHAR}, #{price, jdbcType = VARCHAR},
                 #{img, jdbcType = VARCHAR}, #{online, jdbcType = CHAR})
     </insert>
+    <update id="itemOnline">
+        update item
+        set online = "1"
+        where id = #{id}
+    </update>
+    <update id="itemOffline">
+        update item
+        set online = "0"
+        where id = #{id}
+    </update>
+    <select id="selectByPage" resultType="demo.model.Item">
+        select *
+        from item
+        where user_id = #{userId, jdbcType = INTEGER} limit #{page}
+            , #{num}
+    </select>
+    <select id="getTotalPage" resultType="java.lang.Integer">
+        select count(id)
+        from item
+        where user_id = #{userId, jdbcType = INTEGER};
+    </select>
 </mapper>

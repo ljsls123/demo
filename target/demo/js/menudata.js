@@ -19,7 +19,7 @@ var workerMenuData = [
     {
         "id": "itemControl", iconCls: "fa fa-send-o", text: "项目管理", children: [
             {"id": "createItem", iconCls: "fa fa-send-o", text: "新建项目", url: "/worker/createItem"},
-            {"id": "getItems", iconCls: "fa fa-send-o", text: "新建项目", url: "/worker/getItems"},
+            {"id": "getItems", iconCls: "fa fa-send-o", text: "查看项目", url: "/worker/getItems?page=1"},
         ],
     },
 ];

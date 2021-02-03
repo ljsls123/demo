@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <title></title>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="../../js/bootstrap.js"></script>
     <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
@@ -63,13 +64,126 @@
 
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
-        <span style="line-height: 30px;font-size: 30px;position: relative;top: 50%;transform: translateY(-50%)">欢迎使用XX装修中介系统</span>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>标题</th>
+                <th>类型</th>
+                <th>简介</th>
+                <th>价格</th>
+                <th>是否上线</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${getItemVO.list}" var="getItemVO">
+                <tr>
+                    <td align="center">${getItemVO.title}</td>
+                    <td align="center">${getItemVO.type}</td>
+                    <td align="center">${getItemVO.description}</td>
+                    <td align="center">${getItemVO.price}</td>
+                    <c:if test="${getItemVO.online == '1'}">
+                        <td align="center">已上架</td>
+                        <td align="center">
+                            <button onclick="offline(${getItemVO.id})">下架</button>
+                        </td>
+                    </c:if>
+                    <c:if test="${getItemVO.online != '1'}">
+                        <td align="center">已下架</td>
+                        <td align="center">
+                            <button onclick="online(${getItemVO.id})">上架</button>
+                        </td>
+                    </c:if>
+
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <c:if test="${page == 1}">
+                    <li class="disabled">
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                </c:if>
+                <c:if test="${page != 1}">
+                    <li>
+                        <a href="/worker/getItems?page=${page-1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                </c:if>
+                <c:if test="${getItemVO.totalPage != page}">
+                    <li>
+                        <a href="/worker/getItems?page=${page+1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </c:if>
+                <c:if test="${getItemVO.totalPage == page}">
+                    <li class="disabled">
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </c:if>
+            </ul>
+        </nav>
     </div>
 </div>
 <script>
     $("#menu").sidemenu({
         data: workerMenuData,
     });
+</script>
+<script type="application/javascript">
+    function online(id) {
+        $.ajax({
+            url: "/worker/item/online",
+            type: "post",
+            datatype: "json",
+            data: {
+                id: id
+            },
+            success: function (data) {
+                if (data.code === 0) {
+                    window.location.reload()
+                } else {
+                    alert(data.msg)
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            },
+        })
+    }
+
+    function offline(id) {
+        $.ajax({
+            url: "/worker/item/offline",
+            type: "post",
+            datatype: "json",
+            data: {
+                id: id
+            },
+            success: function (data) {
+                if (data.code === 0) {
+                    window.location.reload()
+                } else {
+                    alert(data.msg)
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            },
+        })
+    }
 </script>
 </body>
 </html>
