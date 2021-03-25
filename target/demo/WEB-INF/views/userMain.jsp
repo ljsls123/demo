@@ -55,7 +55,7 @@
     </div>
 
     <div class="header-menu">
-        <span style="font-size:19px">XX装修中介</span>
+        <span style="font-size:19px">向月航装修中介</span>
     </div>
 </div>
 
@@ -63,7 +63,7 @@
 
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
-        <span style="line-height: 30px;font-size: 30px;position: relative;top: 50%;transform: translateY(-50%)">欢迎使用XX装修中介系统</span>
+        <span style="line-height: 30px;font-size: 30px;position: relative;top: 50%;transform: translateY(-50%)">欢迎使用向月航装修中介系统</span>
     </div>
 </div>
 <script>

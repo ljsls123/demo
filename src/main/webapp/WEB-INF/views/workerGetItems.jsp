@@ -56,7 +56,7 @@
     </div>
 
     <div class="header-menu">
-        <span style="font-size:19px">XX装修中介</span>
+        <span style="font-size:19px">向月航装修中介</span>
     </div>
 </div>
 
@@ -86,15 +86,16 @@
                         <td align="center">已上架</td>
                         <td align="center">
                             <button onclick="offline(${getItemVO.id})">下架</button>
+                            <button><a href="/item/workerDetail?id=${getItemVO.id}"/> 查看详情</button>
                         </td>
                     </c:if>
                     <c:if test="${getItemVO.online != '1'}">
                         <td align="center">已下架</td>
                         <td align="center">
                             <button onclick="online(${getItemVO.id})">上架</button>
+                            <button><a href="/item/workerDetail?id=${getItemVO.id}"/> 查看详情</button>
                         </td>
                     </c:if>
-
                 </tr>
             </c:forEach>
             </tbody>

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <title></title>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="../../js/bootstrap.js"></script>
     <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
@@ -63,29 +64,50 @@
 
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
-        <div class="col-md-5 col-md-offset-3" style="position: absolute;top: 50%;transform: translateY(-50%);">
-            <div style="margin-bottom: 20px"><span class="col-md-2">邮箱</span>
-                <div style="display: inline">${userInfoVo.email}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">电话</span>
-                <div style="display: inline">${userInfoVo.telephone}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">姓名</span>
-                <div style="display: inline">${userInfoVo.userName}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">性别</span>
-                <div style="display: inline">${userInfoVo.gender}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">昵称</span>
-                <div style="display: inline">${userInfoVo.nickName}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">地址</span>
-                <div style="display: inline">${userInfoVo.address}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">类型</span>
-                <div style="display: inline">${userInfoVo.userType}</div>
-            </div>
-        </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>买家姓名</th>
+                <th>买家地址</th>
+                <th>买家电话</th>
+                <th>状态</th>
+                <th>项目名</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${getOrdersVO.list}" var="getOrdersVO">
+                <tr>
+                    <td align="center">${getOrdersVO.user.userName}</td>
+                    <td align="center">${getOrdersVO.user.address}</td>
+                    <td align="center">${getOrdersVO.user.telephone}</td>
+                    <c:if test="${getOrdersVO.ordered.orderStatus == '0'}">
+                        <td align="center">未接单</td>
+                    </c:if>
+                    <c:if test="${getOrdersVO.ordered.orderStatus == '1'}">
+                        <td align="center">已接单</td>
+                    </c:if>
+                    <c:if test="${getOrdersVO.ordered.orderStatus == '2'}">
+                        <td align="center">施工中</td>
+                    </c:if>
+                    <c:if test="${getOrdersVO.ordered.orderStatus == '3'}">
+                        <td align="center">完成</td>
+                    </c:if>
+                    <c:if test="${getOrdersVO.ordered.orderStatus == '4'}">
+                        <td align="center">已拒绝</td>
+                    </c:if>
+                    <td align="center">${getOrdersVO.item.title}</td>
+                    <td align="center"><select id="select" onchange="window.location=this.value">
+                        <option>请选择</option>
+                        <option value="/worker/setOrders?orderId=${getOrdersVO.ordered.id}&status=1">已接单</option>
+                        <option value="/worker/setOrders?orderId=${getOrdersVO.ordered.id}&status=2">开始施工</option>
+                        <option value="/worker/setOrders?orderId=${getOrdersVO.ordered.id}&status=3">施工完成</option>
+                        <option value="/worker/setOrders?orderId=${getOrdersVO.ordered.id}&status=4">拒绝接单</option>
+                    </select></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
     </div>
 </div>
 <script>

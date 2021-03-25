@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <title></title>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <script type="text/javascript" src="../../js/jquery-3.4.1.js"></script>
     <script type="text/javascript" src="../../js/bootstrap.js"></script>
     <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
@@ -51,7 +52,7 @@
 <div class="header">
 
     <div class="logo">
-        <a href="${pageContext.request.contextPath}/worker/main"><span>hello, ${sessionScope.user.nickname}</span></a>
+        <a href="/user/main"><span>hello, ${sessionScope.user.nickname}</span></a>
     </div>
 
     <div class="header-menu">
@@ -63,34 +64,44 @@
 
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
-        <div class="col-md-5 col-md-offset-3" style="position: absolute;top: 50%;transform: translateY(-50%);">
-            <div style="margin-bottom: 20px"><span class="col-md-2">邮箱</span>
-                <div style="display: inline">${userInfoVo.email}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">电话</span>
-                <div style="display: inline">${userInfoVo.telephone}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">姓名</span>
-                <div style="display: inline">${userInfoVo.userName}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">性别</span>
-                <div style="display: inline">${userInfoVo.gender}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">昵称</span>
-                <div style="display: inline">${userInfoVo.nickName}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">地址</span>
-                <div style="display: inline">${userInfoVo.address}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">类型</span>
-                <div style="display: inline">${userInfoVo.userType}</div>
-            </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>标题:</span>
+            <div style="display: inline">${item.title}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>类型:</span>
+            <div style="display: inline">${item.type}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>介绍:</span>
+            <div style="display: inline">${item.description}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>价格:</span>
+            <div style="display: inline">${item.price}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>示例图:</span><img src="${item.img}" alt=""/>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px">
+            <div style="display: inline"><span>用户评论：</span></div>
+            <c:if test="${list.size() != 0}">
+                <c:forEach items="${list}" var="comment">
+                    <div style="display: inline"><span>${comment.nickName}</span><span>${comment.detail}</span></div>
+                </c:forEach>
+            </c:if>
+            <c:if test="${list.size() == 0}">
+                <div style="display: inline"><span>无</span></div>
+            </c:if>
+        </div>
+        <div>
+            <form action="${pageContext.request.contextPath}/user/comment" method="get">
+                <span>评论：   </span>
+                <textarea id="detail" name="detail"></textarea>
+                <input type="hidden" id="itemId" name="itemId" value="${item.id}"/>
+                <button type="submit">提交</button>
+            </form>
         </div>
     </div>
 </div>
 <script>
     $("#menu").sidemenu({
-        data: workerMenuData,
+        data: userMenuData,
     });
 </script>
 </body>

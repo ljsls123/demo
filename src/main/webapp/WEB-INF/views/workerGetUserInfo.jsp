@@ -55,7 +55,7 @@
     </div>
 
     <div class="header-menu">
-        <span style="font-size:19px">XX装修中介</span>
+        <span style="font-size:19px">向月航装修中介</span>
     </div>
 </div>
 
@@ -64,25 +64,25 @@
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
         <div class="col-md-5 col-md-offset-3" style="position: absolute;top: 50%;transform: translateY(-50%);">
-            <div><span class="col-md-2">邮箱</span>
+            <div style="margin-bottom: 20px"><span class="col-md-2">邮箱</span>
                 <div style="display: inline">${userInfoVo.email}</div>
             </div>
-            <div><span class="col-md-2">电话</span>
+            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">电话</span>
                 <div style="display: inline">${userInfoVo.telephone}</div>
             </div>
-            <div><span class="col-md-2">姓名</span>
+            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">姓名</span>
                 <div style="display: inline">${userInfoVo.userName}</div>
             </div>
-            <div><span class="col-md-2">性别</span>
+            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">性别</span>
                 <div style="display: inline">${userInfoVo.gender}</div>
             </div>
-            <div><span class="col-md-2">昵称</span>
+            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">昵称</span>
                 <div style="display: inline">${userInfoVo.nickName}</div>
             </div>
-            <div><span class="col-md-2">地址</span>
+            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">地址</span>
                 <div style="display: inline">${userInfoVo.address}</div>
             </div>
-            <div><span class="col-md-2">类型</span>
+            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">类型</span>
                 <div style="display: inline">${userInfoVo.userType}</div>
             </div>
         </div>

@@ -39,4 +39,51 @@
         from item
         where user_id = #{userId, jdbcType = INTEGER};
     </select>
+    <select id="searchTotalPage" resultType="java.lang.Integer">
+        select count(id)
+        from item
+        where online = '1'
+    </select>
+    <select id="searchByPage" resultType="demo.model.Item">
+        select *
+        from item
+        where online = '1' limit #{page}
+            , #{num}
+    </select>
+    <select id="searchTotalPageByPrice" resultType="java.lang.Integer">
+        select count(id)
+        from item
+        where online = '1'
+          and price + 0 &lt; #{price} + 0
+    </select>
+    <select id="searchByPageByPrice" resultType="demo.model.Item">
+        select *
+        from item
+        where online = '1'
+          and price + 0 &lt; #{price} + 0 limit #{page}
+            , #{num}
+    </select>
+    <select id="searchTotalPageByType" resultType="java.lang.Integer">
+        select count(id)
+        from item
+        where online = '1'
+          and type like "%"#{type, jdbcType=VARCHAR}"%"
+    </select>
+    <select id="searchByPageByType" resultType="demo.model.Item">
+        select *
+        from item
+        where online = '1'
+          and type like "%"#{type, jdbcType=VARCHAR}"%" limit #{page}
+            , #{num}
+    </select>
+    <select id="getIds" resultType="java.lang.Integer">
+        select id
+        from item
+        where user_id = #{id}
+    </select>
+    <select id="getById" resultType="demo.model.Item">
+        select id, title, type, description, price, img
+        from item
+        where id = #{id}
+    </select>
 </mapper>

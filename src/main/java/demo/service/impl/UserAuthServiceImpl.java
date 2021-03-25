@@ -2,20 +2,30 @@ package demo.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 import demo.constant.ErrorCode;
 import demo.dto.LoginDTO;
 import demo.dto.RegisterDTO;
 import demo.dto.UpdatePasswordDTO;
 import demo.exception.BizException;
+import demo.mapper.ItemMapper;
+import demo.mapper.OrderedMapper;
+import demo.mapper.UserCommentMapper;
 import demo.mapper.UserMapper;
+import demo.model.Item;
+import demo.model.Ordered;
 import demo.model.User;
+import demo.model.UserComment;
 import demo.model.response.ResponseResult;
 import demo.service.UserAuthService;
 import demo.util.EncryptUtil;
 import demo.util.ValidateUtil;
+import demo.vo.GetOrdersVO;
 import demo.vo.LoginVO;
 import demo.vo.RegisterVO;
+import demo.vo.SearchItemsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -25,6 +35,15 @@ public class UserAuthServiceImpl implements UserAuthService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ItemMapper itemMapper;
+
+    @Autowired
+    private OrderedMapper orderedMapper;
+
+    @Autowired
+    private UserCommentMapper userCommentMapper;
 
     @Override
     public ResponseResult<RegisterVO> register(RegisterDTO registerDTO) {
@@ -105,6 +124,99 @@ public class UserAuthServiceImpl implements UserAuthService {
         }
         user.setPassword(EncryptUtil.encryptPassword(updatePasswordDTO.getNewPassword(), user.getSalt()));
         userMapper.updateUserByUserId(user);
+        return ResponseResult.success();
+    }
+
+    @Override
+    public ResponseResult<SearchItemsVO> searchItems(int page, int limit) {
+        int totalPage = itemMapper.searchTotalPage() / 5 + 1;
+        int start = (page - 1) * limit;
+        List<Item> list = itemMapper.searchByPage(start, limit);
+        List<SearchItemsVO.SearchItems> list1 = new ArrayList<>();
+        for (Item item : list) {
+            String nickName = userMapper.selectUserByUserId(item.getUserId()).getNickname();
+            SearchItemsVO.SearchItems searchItems = new SearchItemsVO.SearchItems();
+            searchItems.setItem(item);
+            searchItems.setNickName(nickName);
+            list1.add(searchItems);
+        }
+        SearchItemsVO searchItemsVO = new SearchItemsVO();
+        searchItemsVO.setList(list1);
+        searchItemsVO.setTotalPage(totalPage);
+        return ResponseResult.success(searchItemsVO);
+    }
+
+    @Override
+    public ResponseResult<SearchItemsVO> searchItemsByPrice(int page, int limit, String price) {
+        int totalPage = itemMapper.searchTotalPageByPrice(price) / 5 + 1;
+        int start = (page - 1) * limit;
+        List<Item> list = itemMapper.searchByPageByPrice(start, limit, price);
+        List<SearchItemsVO.SearchItems> list1 = new ArrayList<>();
+        for (Item item : list) {
+            String nickName = userMapper.selectUserByUserId(item.getUserId()).getNickname();
+            SearchItemsVO.SearchItems searchItems = new SearchItemsVO.SearchItems();
+            searchItems.setItem(item);
+            searchItems.setNickName(nickName);
+            list1.add(searchItems);
+        }
+        SearchItemsVO searchItemsVO = new SearchItemsVO();
+        searchItemsVO.setList(list1);
+        searchItemsVO.setTotalPage(totalPage);
+        return ResponseResult.success(searchItemsVO);
+    }
+
+    @Override
+    public ResponseResult<SearchItemsVO> searchItemsByType(int page, int limit, String type) {
+        int totalPage = itemMapper.searchTotalPageByType(type) / 5 + 1;
+        int start = (page - 1) * limit;
+        List<Item> list = itemMapper.searchByPageByType(start, limit, type);
+        List<SearchItemsVO.SearchItems> list1 = new ArrayList<>();
+        for (Item item : list) {
+            String nickName = userMapper.selectUserByUserId(item.getUserId()).getNickname();
+            SearchItemsVO.SearchItems searchItems = new SearchItemsVO.SearchItems();
+            searchItems.setItem(item);
+            searchItems.setNickName(nickName);
+            list1.add(searchItems);
+        }
+        SearchItemsVO searchItemsVO = new SearchItemsVO();
+        searchItemsVO.setList(list1);
+        searchItemsVO.setTotalPage(totalPage);
+        return ResponseResult.success(searchItemsVO);
+    }
+
+    @Override
+    public ResponseResult<Void> buy(int userId, int itemId) {
+        Ordered ordered = new Ordered();
+        ordered.setItemId(itemId);
+        ordered.setUserId(userId);
+        ordered.setOrderStatus("0");
+        orderedMapper.insert(ordered);
+        return ResponseResult.success();
+    }
+
+    @Override
+    public ResponseResult<GetOrdersVO> getOrders(int id) {
+        List<Ordered> list = orderedMapper.getUserOrders(id);
+        GetOrdersVO getOrdersVO = new GetOrdersVO();
+        for (Ordered ordered : list) {
+            User user = userMapper.selectUserByUserId(ordered.getUserId());
+            Item item = itemMapper.getById(ordered.getItemId());
+            GetOrdersVO.OrderVO orderVO = new GetOrdersVO.OrderVO();
+            orderVO.setOrdered(ordered);
+            orderVO.setUser(user);
+            orderVO.setItem(item);
+            getOrdersVO.getList().add(orderVO);
+        }
+        return ResponseResult.success(getOrdersVO);
+    }
+
+    @Override
+    public ResponseResult<Void> comment(int userId, int itemId, String detail) {
+        UserComment userComment = new UserComment();
+        userComment.setUserId(userId);
+        userComment.setItemId(itemId);
+        userComment.setDetail(detail);
+        userCommentMapper.insert(userComment);
         return ResponseResult.success();
     }
 }

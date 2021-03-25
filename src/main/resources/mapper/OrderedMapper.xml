@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.mapper.OrderedMapper">
+    <resultMap id="BaseResultMap" type="demo.model.Ordered">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="item_id" property="itemId" jdbcType="INTEGER"/>
+        <result column="order_status" property="orderStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="demo.model.Ordered" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into ordered (id, user_id, item_id, order_status)
+        values (#{id, jdbcType = INTEGER}, #{userId, jdbcType = INTEGER}, #{itemId, jdbcType = INTEGER},
+                #{orderStatus, jdbcType = VARCHAR})
+    </insert>
+    <update id="setOrder">
+        update ordered
+        set order_status=#{status}
+        where id = #{id}
+    </update>
+    <select id="getOrders" resultType="demo.model.Ordered">
+        select id, user_id, item_id, order_status
+        from ordered
+        where
+        <foreach collection="list" index="index" item="entryResources" open="(" close=")" separator="or">
+            item_id = #{entryResources}
+        </foreach>
+    </select>
+    <select id="getUserOrders" resultType="demo.model.Ordered">
+        select id, user_id, item_id, order_status
+        from ordered
+        where user_id = #{id}
+    </select>
+
+</mapper>

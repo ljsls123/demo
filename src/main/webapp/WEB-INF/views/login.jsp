@@ -60,7 +60,7 @@
                 <div class="col-md-8">
                     <select class="form-control" id="type" name="type">
                         <option value="1">用户登录</option>
-                        <option value="2">工人登录</option>
+                        <option value="2">装修工登录</option>
                     </select>
                 </div>
             </div>

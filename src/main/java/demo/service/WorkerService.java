@@ -3,6 +3,7 @@ package demo.service;
 import demo.dto.CreateItemDTO;
 import demo.model.response.ResponseResult;
 import demo.vo.GetItemVO;
+import demo.vo.GetOrdersVO;
 
 public interface WorkerService {
 
@@ -13,4 +14,9 @@ public interface WorkerService {
     ResponseResult<Void> itemOnline(int id);
 
     ResponseResult<Void> itemOffline(int id);
+
+    ResponseResult<GetOrdersVO> getOrders(int id);
+
+    ResponseResult<Void> setOrders(int id, String status);
+
 }

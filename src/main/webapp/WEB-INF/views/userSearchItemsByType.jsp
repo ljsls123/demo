@@ -52,7 +52,7 @@
 <div class="header">
 
     <div class="logo">
-        <a href="${pageContext.request.contextPath}/worker/main"><span>hello, ${sessionScope.user.nickname}</span></a>
+        <a href="/user/main"><span>hello, ${sessionScope.user.nickname}</span></a>
     </div>
 
     <div class="header-menu">
@@ -64,6 +64,21 @@
 
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
+        <div><span>价格筛选   </span>
+            <select id="select" onchange="window.location=this.value">
+                <option>请选择</option>
+                <option value="/user/searchItems/price?page=1&price=100">100以下</option>
+                <option value="/user/searchItems/price?page=1&price=500">500以下</option>
+                <option value="/user/searchItems/price?page=1&price=1000">1000以下</option>
+            </select>
+            <div>
+                <form action="/user/searchItems/type" method="get">
+                    <span>类型筛选   </span><input id="type" name="type"/>
+                    <input type="hidden" id="page" name="page" value="1"/>
+                    <button type="submit">筛选</button>
+                </form>
+            </div>
+        </div>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -71,31 +86,22 @@
                 <th>类型</th>
                 <th>简介</th>
                 <th>价格</th>
-                <th>是否上线</th>
+                <th>商家昵称</th>
                 <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${getItemVO.list}" var="getItemVO">
+            <c:forEach items="${searchItemVO.list}" var="searchItem">
                 <tr>
-                    <td align="center">${getItemVO.title}</td>
-                    <td align="center">${getItemVO.type}</td>
-                    <td align="center">${getItemVO.description}</td>
-                    <td align="center">${getItemVO.price}</td>
-                    <c:if test="${getItemVO.online == '1'}">
-                        <td align="center">已上架</td>
-                        <td align="center">
-                            <button onclick="offline(${getItemVO.id})">下架</button>
-                            <button><a href="/item/workerDetail?id=${getItemVO.id}"/> 查看详情</button>
-                        </td>
-                    </c:if>
-                    <c:if test="${getItemVO.online != '1'}">
-                        <td align="center">已下架</td>
-                        <td align="center">
-                            <button onclick="online(${getItemVO.id})">上架</button>
-                            <button><a href="/item/workerDetail?id=${getItemVO.id}"/> 查看详情</button>
-                        </td>
-                    </c:if>
+                    <td align="center">${searchItem.item.title}</td>
+                    <td align="center">${searchItem.item.type}</td>
+                    <td align="center">${searchItem.item.description}</td>
+                    <td align="center">${searchItem.item.price}</td>
+                    <td align="center">${searchItem.nickName}</td>
+                    <td align="center">
+                        <button onclick="buy(${searchItem.item.id})">购买</button>
+                        <button onclick="detail(${searchItem.item.id})">查看详情</button>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -111,19 +117,19 @@
                 </c:if>
                 <c:if test="${page != 1}">
                     <li>
-                        <a href="/worker/getItems?page=${page-1}}" aria-label="Previous">
+                        <a href="/user/searchItems/type?page=${page-1}&type=${type}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 </c:if>
-                <c:if test="${getItemVO.totalPage != page}">
+                <c:if test="${searchItemVO.totalPage != page}">
                     <li>
-                        <a href="/worker/getItems?page=${page+1}}" aria-label="Next">
+                        <a href="/user/searchItems/price?page=${page+1}&type=${type}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 </c:if>
-                <c:if test="${getItemVO.totalPage == page}">
+                <c:if test="${searchItemVO.totalPage == page}">
                     <li class="disabled">
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -136,18 +142,16 @@
 </div>
 <script>
     $("#menu").sidemenu({
-        data: workerMenuData,
+        data: userMenuData,
     });
 </script>
 <script type="application/javascript">
-    function online(id) {
+    function buy(id) {
         $.ajax({
-            url: "/worker/item/online",
-            type: "post",
+            url: "/user/buy?itemId=" + id,
+            type: "get",
             datatype: "json",
-            data: {
-                id: id
-            },
+            data: {},
             success: function (data) {
                 if (data.code === 0) {
                     window.location.reload()
@@ -163,27 +167,8 @@
         })
     }
 
-    function offline(id) {
-        $.ajax({
-            url: "/worker/item/offline",
-            type: "post",
-            datatype: "json",
-            data: {
-                id: id
-            },
-            success: function (data) {
-                if (data.code === 0) {
-                    window.location.reload()
-                } else {
-                    alert(data.msg)
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.responseText);
-                console.log(textStatus);
-                console.log(errorThrown);
-            },
-        })
+    function detail(id) {
+        window.location.href = "/item/userDetail?id=" + id;
     }
 </script>
 </body>

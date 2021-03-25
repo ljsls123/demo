@@ -63,28 +63,19 @@
 
 <div class="main">
     <div id="mainframe" style="width:100%;height:100%;text-align: center">
-        <div class="col-md-5 col-md-offset-3" style="position: absolute;top: 50%;transform: translateY(-50%);">
-            <div style="margin-bottom: 20px"><span class="col-md-2">邮箱</span>
-                <div style="display: inline">${userInfoVo.email}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">电话</span>
-                <div style="display: inline">${userInfoVo.telephone}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">姓名</span>
-                <div style="display: inline">${userInfoVo.userName}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">性别</span>
-                <div style="display: inline">${userInfoVo.gender}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">昵称</span>
-                <div style="display: inline">${userInfoVo.nickName}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">地址</span>
-                <div style="display: inline">${userInfoVo.address}</div>
-            </div>
-            <div style="margin-bottom: 20px; margin-top: 20px"><span class="col-md-2">类型</span>
-                <div style="display: inline">${userInfoVo.userType}</div>
-            </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>标题:</span>
+            <div style="display: inline">${item.title}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>类型:</span>
+            <div style="display: inline">${item.type}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>介绍:</span>
+            <div style="display: inline">${item.description}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>价格:</span>
+            <div style="display: inline">${item.price}</div>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 30px"><span>示例图:</span><img src="${item.img}" alt=""/>
         </div>
     </div>
 </div>
