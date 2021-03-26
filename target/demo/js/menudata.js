@@ -37,4 +37,10 @@ var workerMenuData = [
             {"id": "getOrders", iconCls: "fa fa-send-o", text: "查看订单", url: "/worker/getOrders"},
         ],
     },
+    {
+        "id": "typeControl", iconCls: "fa fa-send-o", text: "类型管理", children: [
+            {"id": "createType", iconCls: "fa fa-send-o", text: "新建类型", url: "/type/create"},
+            {"id": "getType", iconCls: "fa fa-send-o", text: "查看类型", url: "/type/get?page=1"},
+        ],
+    },
 ];
