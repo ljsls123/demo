@@ -3,7 +3,9 @@ package demo.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import demo.constant.ErrorCode;
 import demo.dto.LoginDTO;
@@ -11,13 +13,19 @@ import demo.dto.RegisterDTO;
 import demo.dto.UpdatePasswordDTO;
 import demo.exception.BizException;
 import demo.mapper.ItemMapper;
+import demo.mapper.MenuMapper;
 import demo.mapper.OrderedMapper;
+import demo.mapper.RoleMenuMapper;
 import demo.mapper.UserCommentMapper;
 import demo.mapper.UserMapper;
+import demo.mapper.UserRoleMapper;
 import demo.model.Item;
+import demo.model.Menu;
 import demo.model.Ordered;
+import demo.model.RoleMenu;
 import demo.model.User;
 import demo.model.UserComment;
+import demo.model.UserRole;
 import demo.model.response.ResponseResult;
 import demo.service.UserAuthService;
 import demo.util.EncryptUtil;
@@ -45,6 +53,15 @@ public class UserAuthServiceImpl implements UserAuthService {
     @Autowired
     private UserCommentMapper userCommentMapper;
 
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+
+    @Autowired
+    private RoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    private MenuMapper menuMapper;
+
     @Override
     public ResponseResult<RegisterVO> register(RegisterDTO registerDTO) {
         if (ValidateUtil.emailFormatCheck(registerDTO.getEmail())) {
@@ -69,12 +86,17 @@ public class UserAuthServiceImpl implements UserAuthService {
         LocalDateTime date = LocalDateTime.now(ZoneOffset.UTC);
         user.setCreateAt(date);
         user.setUpdateAt(date);
+        int userId = -1;
         try {
-            userMapper.insertUser(user);
+            userId = userMapper.insertUser(user);
         } catch (DuplicateKeyException e) {
             throw new BizException(ErrorCode.EMAIL_EXISTED_ERROR,
                     String.format("email: %s have registered already when Register.", registerDTO.getEmail()));
         }
+        UserRole userRole = new UserRole();
+        userRole.setUserId(userId);
+        userRole.setRoleId(Integer.valueOf(registerDTO.getType()));
+        userRoleMapper.insert(userRole);
         RegisterVO registerVO = new RegisterVO(user.getId(), date);
         return ResponseResult.success(registerVO);
     }
@@ -103,6 +125,7 @@ public class UserAuthServiceImpl implements UserAuthService {
             throw new BizException(ErrorCode.PASSWORD_WRONG_ERROR,
                     "the user does not existed.");
         }
+
         return ResponseResult.success(new LoginVO(user));
     }
 
@@ -218,5 +241,30 @@ public class UserAuthServiceImpl implements UserAuthService {
         userComment.setDetail(detail);
         userCommentMapper.insert(userComment);
         return ResponseResult.success();
+    }
+
+    @Override
+    public ResponseResult<List<Menu>> getMenu(int userId) {
+        UserRole userRole = userRoleMapper.selectByUserId(userId);
+        List<RoleMenu> parentMenu = roleMenuMapper.selectParentByRoleId(userRole.getRoleId());
+        List<Menu> menuList = new ArrayList<>();
+        Map<Integer, Menu> map = new HashMap<>();
+        List<Menu> menus = new ArrayList<>();
+        for (RoleMenu roleMenu : parentMenu) {
+            Menu menu = menuMapper.selectByid(roleMenu.getMenuId());
+            menuList.add(menu);
+        }
+        for (Menu menu : menuList) {
+            if (menu.getPid() == 0) {
+                map.put(menu.getId(), menu);
+            }
+        }
+        for (Menu child : menuList) {
+            if (child.getPid() != 0) {
+                map.get(child.getPid()).getChild().add(child);
+            }
+        }
+        menus = new ArrayList<>(map.values());
+        return ResponseResult.success(menus);
     }
 }

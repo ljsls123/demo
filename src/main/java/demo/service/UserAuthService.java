@@ -1,8 +1,11 @@
 package demo.service;
 
+import java.util.List;
+
 import demo.dto.LoginDTO;
 import demo.dto.RegisterDTO;
 import demo.dto.UpdatePasswordDTO;
+import demo.model.Menu;
 import demo.model.response.ResponseResult;
 import demo.vo.GetOrdersVO;
 import demo.vo.LoginVO;
@@ -27,4 +30,6 @@ public interface UserAuthService {
     ResponseResult<GetOrdersVO> getOrders(int id);
 
     ResponseResult<Void> comment(int userId, int itemId, String detail);
+
+    ResponseResult<List<Menu>> getMenu(int userId);
 }

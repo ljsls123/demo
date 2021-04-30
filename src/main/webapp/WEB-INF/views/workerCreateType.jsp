@@ -83,7 +83,7 @@
 </div>
 <script>
     $("#menu").sidemenu({
-        data: workerMenuData,
+        data: eval('${sessionScope.menuList}'),
     });
 </script>
 <script type="text/javascript">

@@ -1,12 +1,16 @@
 package demo.controller;
 
+import java.util.List;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import demo.dto.LoginDTO;
 import demo.dto.RegisterDTO;
 import demo.dto.UpdatePasswordDTO;
+import demo.model.Menu;
 import demo.model.response.ResponseResult;
 import demo.service.UserAuthService;
+import demo.util.Utils;
 import demo.vo.GetOrdersVO;
 import demo.vo.LoginVO;
 import demo.vo.RegisterVO;
@@ -15,7 +19,11 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -42,8 +50,9 @@ public class UserAuthController {
     @PostMapping(value = "/login")
     @ResponseBody
     public ResponseResult<LoginVO> login(LoginDTO loginDTO, HttpSession session) {
-        System.out.println("123123123");
         LoginVO loginVO = userAuthService.login(loginDTO).getResult();
+        List<Menu> menuList = userAuthService.getMenu(loginVO.getUserId()).getResult();
+        session.setAttribute("menuList", new Gson().toJson(Utils.getMenuJson(menuList)));
         session.setAttribute("user", loginVO);
         return ResponseResult.success(loginVO);
     }

@@ -142,7 +142,7 @@
 </div>
 <script>
     $("#menu").sidemenu({
-        data: userMenuData,
+        data: eval('${sessionScope.menuList}'),
     });
 </script>
 <script type="application/javascript">
